@@ -3,6 +3,8 @@ package com.atonai.engine.perm
 import com.atonai.data.perms.Action
 import com.atonai.data.perms.PermissionReq
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -25,9 +27,9 @@ class PermQueueTest {
     fun ask_publishes_the_question_until_answered() = runBlocking {
         val queue = PermQueue()
         val answer = async { queue.ask(req()) }
-        // Give the coroutine a chance to publish.
-        while (queue.pending.value == null) { /* spin */ }
-        assertEquals("q1", queue.pending.value?.req?.id)
+        // Yield so the async body runs and publishes on the single test thread.
+        val slot = queue.pending.filterNotNull().first()
+        assertEquals("q1", slot.req.id)
         assertTrue(queue.reply("q1", PermissionReq.ALLOW_ONCE))
         assertEquals(PermissionReq.ALLOW_ONCE, answer.await())
         assertNull(queue.pending.value)
@@ -37,7 +39,7 @@ class PermQueueTest {
     fun reply_with_wrong_id_is_ignored() = runBlocking {
         val queue = PermQueue()
         val answer = async { queue.ask(req()) }
-        while (queue.pending.value == null) { /* spin */ }
+        queue.pending.filterNotNull().first()
         assertFalse(queue.reply("other", PermissionReq.ALLOW_ONCE))
         assertTrue(queue.reply("q1", PermissionReq.DENY))
         assertEquals(PermissionReq.DENY, answer.await())
@@ -47,7 +49,7 @@ class PermQueueTest {
     fun cancel_denies_the_outstanding_question() = runBlocking {
         val queue = PermQueue()
         val answer = async { queue.ask(req()) }
-        while (queue.pending.value == null) { /* spin */ }
+        queue.pending.filterNotNull().first()
         queue.cancel()
         assertEquals(PermissionReq.DENY, answer.await())
     }

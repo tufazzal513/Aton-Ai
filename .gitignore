@@ -1,0 +1,29 @@
+# Gradle
+.gradle/
+build/
+*/build/
+!gradle/wrapper/gradle-wrapper.jar
+
+# Android / IDE
+local.properties
+*.iml
+.idea/
+.cxx/
+captures/
+
+# Keystores & secrets
+*.jks
+*.keystore
+keystore.properties
+secrets.properties
+
+# OS / misc
+.DS_Store
+*.log
+
+# Reverse-engineering scratch files (never commit)
+*.apks
+*.apk
+*.dex
+*.jar
+!gradle/wrapper/gradle-wrapper.jar

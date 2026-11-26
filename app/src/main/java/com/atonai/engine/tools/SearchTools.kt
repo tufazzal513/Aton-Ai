@@ -7,7 +7,7 @@ import kotlinx.serialization.json.putJsonObject
 import java.io.File
 
 /**
- * Finds files by glob pattern (`**\/*.kt`, `src/**\/*Test.kt`). Results are
+ * Finds files by glob pattern (star-star spans directories). Results are
  * workspace-relative, sorted by modification time (newest first) like the
  * original, then by path.
  */

@@ -1,5 +1,6 @@
 package com.atonai
 
+import android.app.Application
 import android.content.Context
 import com.atonai.data.ProviderRegistry
 import com.atonai.data.SettingsStore

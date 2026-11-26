@@ -75,7 +75,7 @@ sealed interface LlmEvent {
         val argsFragment: String? = null,
     ) : LlmEvent
 
-    data class Usage(val usage: Usage) : LlmEvent
+    data class Usage(val usage: com.atonai.engine.llm.Usage) : LlmEvent
     data class Done(val stopReason: String? = null) : LlmEvent
     data class Failed(val message: String, val retryable: Boolean = false) : LlmEvent
 

@@ -3,7 +3,7 @@ package com.atonai.data.perms
 /**
  * Matches a request against the persisted rule list. Rules are evaluated
  * most-specific-first: an exact pattern beats a wildcard, and a longer pattern
- * beats a shorter one, so `write lib/**` can refine a broader `write **`.
+ * beats a shorter one, so a narrower glob refines a broader one.
  *
  * Pure and dependency-free so the whole decision table is unit-testable.
  */

@@ -68,10 +68,10 @@ class DiagnosticsTool : Tool {
     }
 
     /** One issue per file when the whole document fails to parse. */
-    fun checkJson(path: String, text: String): List<Issue> = runCatching {
+    fun checkJson(path: String, text: String): List<Issue> = runCatching<List<Issue>> {
         json.parseToJsonElement(text)
         emptyList()
-    }.getOrElse { e ->
+    }.getOrElse { e: Throwable ->
         val line = extractLine(e.message)
         listOf(Issue(path, line, e.message?.substringBefore('\n') ?: "invalid JSON"))
     }

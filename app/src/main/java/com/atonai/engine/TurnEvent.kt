@@ -14,7 +14,11 @@ sealed interface TurnEvent {
     data class ToolStarted(val call: Part.ToolCall) : TurnEvent
     data class ToolFinished(val call: Part.ToolCall) : TurnEvent
 
-    data class Usage(val usage: Usage, val deltaUsd: Double, val totalUsd: Double) : TurnEvent
+    data class Usage(
+        val usage: com.atonai.engine.llm.Usage,
+        val deltaUsd: Double,
+        val totalUsd: Double,
+    ) : TurnEvent
 
     data class Notice(val text: String) : TurnEvent
     data class Failed(val message: String) : TurnEvent

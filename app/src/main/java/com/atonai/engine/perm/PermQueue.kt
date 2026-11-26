@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
  */
 class PermQueue {
 
-    private val _pending = MutableStateFlow<PendingPerm?>()
+    private val _pending = MutableStateFlow<PendingPerm?>(null)
     val pending: StateFlow<PendingPerm?> = _pending.asStateFlow()
 
     /** Suspends until the user answers; the gate awaits this. */

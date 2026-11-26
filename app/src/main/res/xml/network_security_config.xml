@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Global cleartext stays OFF. Only loopback is allowed so the user can point a
+  provider at a local Ollama / LM Studio server (http://127.0.0.1:...).
+  See 06_GAP_ANALYSIS.md technical-debt item and decision D-10.
+-->
+<network-security-config>
+    <base-config cleartextTrafficPermitted="false" />
+
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="false">localhost</domain>
+        <domain includeSubdomains="false">127.0.0.1</domain>
+        <domain includeSubdomains="false">::1</domain>
+    </domain-config>
+</network-security-config>

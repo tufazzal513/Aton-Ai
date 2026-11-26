@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <include domain="sharedpref" path="." />
+    <exclude domain="sharedpref" path="aton_secure.preferences_pb" />
+    <exclude domain="sharedpref" path="aton_prefs.preferences_pb" />
+    <exclude domain="sharedpref" path="aton_secrets.xml" />
+</full-backup-content>

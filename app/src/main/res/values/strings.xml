@@ -1,0 +1,55 @@
+<resources>
+    <string name="app_name">AtonAI</string>
+
+    <!-- Navigation -->
+    <string name="nav_chat">Chat</string>
+    <string name="nav_code">Code</string>
+    <string name="nav_mcp">MCP</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Chat -->
+    <string name="chat_title">AtonAI</string>
+    <string name="chat_input_hint">Message AtonAI…</string>
+    <string name="chat_send">Send</string>
+    <string name="chat_stop">Stop</string>
+    <string name="chat_empty_title">Start a conversation</string>
+    <string name="chat_empty_body">Ask anything. AtonAI can also read and edit files in its workspace.</string>
+    <string name="chat_model_label">Model</string>
+
+    <!-- Code -->
+    <string name="code_title">Code</string>
+    <string name="code_empty">No files yet. Create one to get started.</string>
+    <string name="code_new_file">New file</string>
+    <string name="code_file_name">File name</string>
+    <string name="code_save">Save</string>
+    <string name="code_delete">Delete</string>
+    <string name="code_create">Create</string>
+    <string name="code_cancel">Cancel</string>
+
+    <!-- MCP -->
+    <string name="mcp_title">MCP Servers</string>
+    <string name="mcp_empty">No MCP servers configured.</string>
+    <string name="mcp_add">Add server</string>
+    <string name="mcp_name">Name</string>
+    <string name="mcp_url">Endpoint URL</string>
+    <string name="mcp_token">Bearer token (optional)</string>
+    <string name="mcp_connect">Connect</string>
+    <string name="mcp_disconnect">Disconnect</string>
+    <string name="mcp_tools">Tools</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_provider">Provider</string>
+    <string name="settings_api_key">API key</string>
+    <string name="settings_api_key_hint">Stored securely on this device</string>
+    <string name="settings_save">Save</string>
+    <string name="settings_saved">Saved</string>
+    <string name="settings_about">About</string>
+    <string name="settings_about_body">AtonAI is an open, independently built coding agent for Android.</string>
+
+    <!-- Common -->
+    <string name="common_ok">OK</string>
+    <string name="common_loading">Loading…</string>
+    <string name="common_error">Something went wrong</string>
+    <string name="common_retry">Retry</string>
+</resources>

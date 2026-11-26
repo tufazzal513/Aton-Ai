@@ -13,8 +13,8 @@ object Diff {
     /** Unified diff text (`---`/`+++`/`@@` headers) or "" when nothing changed. */
     fun unified(name: String, before: String, after: String, context: Int = 3): String {
         if (before == after) return ""
-        val a = before.lines()
-        val b = after.lines()
+        val a = splitLines(before)
+        val b = splitLines(after)
         val ops = lcs(a, b)
         val hunks = hunks(ops, context)
         if (hunks.isEmpty()) return ""
@@ -33,8 +33,19 @@ object Diff {
     /** Added / removed line counts, for the tool card summary. */
     fun stats(before: String, after: String): Pair<Int, Int> {
         if (before == after) return 0 to 0
-        val ops = lcs(before.lines(), after.lines())
+        val ops = lcs(splitLines(before), splitLines(after))
         return ops.count { it.kind == '+' } to ops.count { it.kind == '-' }
+    }
+
+    /**
+     * Splits on newlines without inventing a phantom empty last line for the
+     * conventional trailing newline ("a\nb\n" is two lines, not three) — that
+     * phantom line would otherwise inflate every hunk's line counts.
+     */
+    private fun splitLines(text: String): List<String> {
+        if (text.isEmpty()) return emptyList()
+        val out = text.split('\n')
+        return if (text.endsWith('\n')) out.dropLast(1) else out
     }
 
     private data class Hunk(val aStart: Int, val aCount: Int, val bStart: Int, val bCount: Int, val lines: List<Line>)

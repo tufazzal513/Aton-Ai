@@ -21,7 +21,7 @@ object TurnBuilder {
                     turns += LlmTurn.User(msg.text, msg.images.toList())
                 }
 
-                Msg.ASSISTANT -> buildAssistant(msg, turns)
+                Msg.ASSISTANT -> buildAssistant(msg, turns, toolResultCap)
 
                 Msg.NOTICE -> Unit // notices are UI-only, never sent to the model
 
@@ -31,12 +31,15 @@ object TurnBuilder {
         return turns
     }
 
-    private fun buildAssistant(msg: Msg, into: MutableList<LlmTurn>) {
+    private fun buildAssistant(msg: Msg, into: MutableList<LlmTurn>, cap: Int) {
         val text = StringBuilder()
         val calls = mutableListOf<Part.ToolCall>()
 
         if (msg.parts.isEmpty()) {
-            if (msg.llmText.isNotBlank()) text.append(msg.llmText)
+            // Persisted assistant text lives in `text`; `llmText` is the raw
+            // stream buffer and wins only when it is the sole source.
+            val raw = msg.llmText.ifBlank { msg.text }
+            if (raw.isNotBlank()) text.append(raw)
         } else {
             msg.parts.forEach { part ->
                 when (part) {
@@ -58,7 +61,7 @@ object TurnBuilder {
                 "error" -> "[error] ${call.output}"
                 else -> call.output
             }
-            into += LlmTurn.ToolResult(call.id, truncate(content, TOOL_RESULT_CAP))
+            into += LlmTurn.ToolResult(call.id, truncate(content, cap))
         }
     }
 

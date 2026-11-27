@@ -20,6 +20,8 @@ import com.atonai.data.prefs.ThemeMode
 private val DarkScheme = darkColorScheme(
     primary = Palette.primary,
     onPrimary = Color.White,
+    primaryContainer = Palette.primaryContainer,
+    onPrimaryContainer = Palette.onPrimaryContainer,
     secondary = Palette.accent,
     onSecondary = Color.Black,
     background = Palette.bgBaseDark,
@@ -28,14 +30,21 @@ private val DarkScheme = darkColorScheme(
     onSurface = Palette.fgDefaultDark,
     surfaceVariant = Palette.bgSurfaceVariantDark,
     onSurfaceVariant = Palette.fgMutedDark,
+    // Screenshot dialogs sit on a raised #191D26-like panel. UNSURE exactness.
+    surfaceContainer = Palette.bgSurfaceVariantDark,
+    surfaceContainerHigh = Palette.bgSurfaceDark,
     outline = Palette.outlineDark,
+    outlineVariant = Palette.outlineStrongDark,
     error = Palette.error,
+    onError = Color.White,
     tertiary = Palette.warn,
 )
 
 private val LightScheme = lightColorScheme(
-    primary = Palette.primaryDark,
+    primary = Palette.primary,
     onPrimary = Color.White,
+    primaryContainer = Palette.bgSurfaceVariantLight,
+    onPrimaryContainer = Palette.fgDefaultLight,
     secondary = Palette.accent,
     background = Palette.bgBaseLight,
     onBackground = Palette.fgDefaultLight,

@@ -40,6 +40,7 @@ data class UiState(
     val models: List<CatalogModel> = emptyList(),
     val providerId: String? = null,
     val modelId: String? = null,
+    val agent: String = "general",
     val input: String = "",
     val tokens: Long = 0,
     val cost: Double = 0.0,
@@ -120,6 +121,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
                 items = ChatProjector.toItems(session, engine.isBusy(session.id)),
                 providerId = providerId,
                 modelId = modelId,
+                agent = session.agent,
                 models = graph.registry.provider(providerId)?.models.orEmpty(),
                 tokens = session.totalTokens,
                 cost = session.costUsd,
@@ -171,6 +173,14 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         val session = engine.session(_state.value.currentId)
         session?.let { it.modelId = modelId }
         _state.update { it.copy(modelId = modelId) }
+        session?.let { s -> viewModelScope.launch { engine.persist(s) } }
+    }
+
+    fun selectAgent(agent: String) {
+        val normalized = agent.takeIf { it == "plan" } ?: "general"
+        val session = engine.session(_state.value.currentId)
+        session?.let { it.agent = normalized }
+        _state.update { it.copy(agent = normalized) }
         session?.let { s -> viewModelScope.launch { engine.persist(s) } }
     }
 

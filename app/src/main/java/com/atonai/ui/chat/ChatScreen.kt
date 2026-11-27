@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Code
 import androidx.compose.material.icons.filled.Hub
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -23,6 +24,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -55,6 +57,8 @@ fun ChatScreen(
     val state by vm.state.collectAsStateWithLifecycle()
     val listState = rememberLazyListState()
     var menu by remember { mutableStateOf(false) }
+    var modelMenu by remember { mutableStateOf(false) }
+    var agentMenu by remember { mutableStateOf(false) }
 
     // Follow the stream, but only while the last row is already near the end.
     LaunchedEffect(state.items.size, state.isBusy) {
@@ -76,6 +80,37 @@ fun ChatScreen(
                             overflow = TextOverflow.Ellipsis,
                             style = MaterialTheme.typography.titleMedium,
                         )
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            TextButton(onClick = { modelMenu = true }) {
+                                val modelName = state.models.firstOrNull { it.id == state.modelId }?.name
+                                    ?: state.modelId?.takeIf { it.isNotBlank() }
+                                    ?: "Choose model"
+                                Text(modelName, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                                Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
+                            }
+                            DropdownMenu(expanded = modelMenu, onDismissRequest = { modelMenu = false }) {
+                                state.models.forEach { model ->
+                                    DropdownMenuItem(
+                                        text = { Text(model.name) },
+                                        onClick = { modelMenu = false; vm.selectModel(model.id) },
+                                    )
+                                }
+                            }
+                            TextButton(onClick = { agentMenu = true }) {
+                                Text(if (state.agent == "plan") "Plan" else "Build")
+                                Icon(Icons.Filled.ArrowDropDown, contentDescription = null)
+                            }
+                            DropdownMenu(expanded = agentMenu, onDismissRequest = { agentMenu = false }) {
+                                DropdownMenuItem(
+                                    text = { Text("Build") },
+                                    onClick = { agentMenu = false; vm.selectAgent("general") },
+                                )
+                                DropdownMenuItem(
+                                    text = { Text("Plan") },
+                                    onClick = { agentMenu = false; vm.selectAgent("plan") },
+                                )
+                            }
+                        }
                         if (state.isBusy) {
                             Text(
                                 text = "Working…",
@@ -127,7 +162,7 @@ fun ChatScreen(
         },
     ) { padding ->
         if (state.items.isEmpty()) {
-            EmptyChat(modifier = Modifier.padding(padding))
+            EmptyChat(modifier = Modifier.padding(padding), onSuggestion = vm::onInputChange)
         } else {
             LazyColumn(
                 state = listState,
@@ -156,9 +191,9 @@ fun ChatScreen(
 }
 
 @Composable
-private fun EmptyChat(modifier: Modifier = Modifier) {
+private fun EmptyChat(modifier: Modifier = Modifier, onSuggestion: (String) -> Unit) {
     Column(
-        modifier = modifier.fillMaxWidth().padding(Space.lg),
+        modifier = modifier.fillMaxWidth().padding(horizontal = Space.lg),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -172,6 +207,14 @@ private fun EmptyChat(modifier: Modifier = Modifier) {
             color = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.padding(top = Space.xs),
         )
+        listOf("Explain a piece of code", "Find and fix a bug", "Build a feature").forEach { suggestion ->
+            androidx.compose.material3.OutlinedButton(
+                onClick = { onSuggestion(suggestion) },
+                modifier = Modifier.fillMaxWidth().padding(top = Space.xs),
+            ) {
+                Text(suggestion, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            }
+        }
     }
 }
 
